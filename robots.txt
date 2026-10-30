@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://salavat-bahcesi-mobil-108.niceeft10.chatgpt.site/sitemap.xml

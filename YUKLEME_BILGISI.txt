@@ -1,0 +1,15 @@
+SALAVAT BAHÇESİ — GITHUB YÜKLEME PAKETİ
+31 Ekim 2026 · Yayındaki 32. sürümden hazırlanmıştır.
+
+ZIP dosyasını iPhone Dosyalar uygulamasında açın.
+GitHub’a ZIP’in kendisini değil, açılan dosyaları yükleyin.
+index.html ve diğer dosyalar deponun ana dizininde bulunmalı.
+audio, icons, mevlid ve quran-audio klasörleri adları korunarak aynı yere yüklenmeli.
+Eski index.html dosyası yenisiyle değiştirilmelidir.
+
+İçerik: güncel salavatlar, Kur’an metni ve 114 sûre sesi, Esmâ, zikir,
+Mevlid sesi ve yazısı, kaza namazı takibi, Ehl-i Beyt ve Ashâb-ı Kirâm.
+Mevcut sürümdeki bir salavat ses kaydı dahil edilmiştir.
+
+Bu ZIP web yayını içindir; App Store veya Google Play uygulama paketi değildir.
+Okuma sayaçları bu pakete dahil değildir; kullandığınız tarayıcıda saklanır.

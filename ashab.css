@@ -1,0 +1,24 @@
+
+.ashab-reader{color:var(--ink);line-height:1.65;overflow-wrap:break-word}
+.ashab-reader h2{font-size:26px;margin:30px 0 14px}.ashab-reader h3{font-size:21px;margin:26px 0 12px}
+.ashab-reader .count{font:13px system-ui;color:var(--muted,#687569)}
+.ashab-reader .person{background:var(--card,#fffdf8);border:1px solid var(--line,#ded8c8);border-radius:12px;margin:10px 0;padding:15px 16px}
+.ashab-reader .name{font-size:18px;font-weight:600;line-height:1.6}.ashab-reader .name small{font-size:13px;white-space:nowrap}
+.ashab-reader .num{color:#97762f;font-size:14px;margin-right:7px}
+.ashab-reader .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.ashab-reader .badge{background:#e5eee6;color:#20513c;font-size:12px;padding:4px 8px;border-radius:6px}
+.ashab-reader .pending{background:#f5e9d3;color:#735023}
+.ashab-reader .description{font-size:15px;margin:8px 0 0;line-height:1.8}
+.ashab-reader .section-note{font-size:14px;color:var(--muted,#687569)}
+.ashab-reader a{color:inherit;text-underline-offset:3px}.ashab-reader details{font-size:14px;margin-top:10px}
+.ashab-reader summary{cursor:pointer}.ashab-reader li{margin:12px 0}
+.ashab-reader footer{border-top:1px solid var(--line);margin-top:35px;padding:15px 0}
+.ashab-reader section{scroll-margin-top:calc(var(--app-top-height,180px) + 12px)}
+.ashab-reader #ruhlarina-fatiha{border-top:2px solid #b7954b;margin-top:40px;padding-top:8px}
+.ashab-reader #ruhlarina-fatiha .person{border-color:#b7954b}.ashab-reader #ruhlarina-fatiha .description{font-size:18px;line-height:1.9;margin:0}
+.night .ashab-reader .badge{background:#264737;color:#e4eee4}.night .ashab-reader .pending{background:#55472d;color:#f6e7c6}
+.app-top .devotion-entry #openAshab{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;grid-column:span 3;min-height:64px;border:1px solid #c3b078;border-radius:14px;padding:8px 12px;font-size:14px;line-height:1.35;background:#fffdf7;color:#203e34;text-align:center;font-weight:600}
+.app-top .devotion-entry #openAshab .section-icon{margin:0;flex-shrink:0}
+.app-top .devotion-entry #openAshab[aria-pressed="true"]{background:#245243;color:#fff;border-color:#245243;box-shadow:0 3px 8px #18352b16}
+.app-top .devotion-entry #openAshab:focus-visible{outline:3px solid #b7954b;outline-offset:2px}
+.night .app-top .devotion-entry #openAshab{background:#1a332a;color:#e5eedf}.night .app-top .devotion-entry #openAshab[aria-pressed="true"]{background:#b7954b;color:#10251c}
