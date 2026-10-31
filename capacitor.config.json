@@ -1,0 +1,10 @@
+{
+  "appId": "com.hayrullahbezan.salavatbahcesi",
+  "appName": "Salavat Bahçesi",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "automatic",
+    "backgroundColor": "#073d30",
+    "allowsLinkPreview": false
+  }
+}

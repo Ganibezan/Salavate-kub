@@ -1,0 +1,24 @@
+{
+  "name": "salavat-bahcesi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Salavat Bahçesi iPhone uygulaması",
+  "scripts": {
+    "build": "node scripts/prepare-web.mjs",
+    "ios:prepare": "npm run build && cap sync ios"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.6.0",
+    "@capacitor/filesystem": "8.1.5",
+    "@capacitor/ios": "8.6.0",
+    "@capacitor/preferences": "8.0.1",
+    "@capacitor/share": "8.0.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.0"
+  }
+}
