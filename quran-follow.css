@@ -13,3 +13,7 @@
 .quran-ayah{scroll-margin-top:175px}
 @media(max-width:520px){.quran-follow-dock{gap:9px;padding:10px;top:66px}.quran-follow-dock .quran-check{width:100%;justify-content:flex-start}.offline-package h3{font-size:19px}}
 @media(prefers-reduced-motion:reduce){.quran-ayah.quran-playing{transition:none}}
+
+/* Keep the audio-follow panel and highlighted verse readable at night. */
+body.night .quran-follow-dock{background:#19392ff5;color:var(--ink);border-color:var(--line)}
+body.night .quran-ayah.quran-playing{background:#294b39;color:var(--ink)}
