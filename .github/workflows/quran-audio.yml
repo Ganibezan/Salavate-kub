@@ -1,0 +1,65 @@
+name: Kur'an seslerini tek tek yukle
+on:
+  push:
+    paths:
+      - '.github/workflows/quran-audio.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: quran-audio-upload
+  cancel-in-progress: false
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ses araclarini hazirla
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+      - name: Sureleri sirayla indir, dogrula ve tek tek yukle
+        shell: python
+        run: |
+          import json, pathlib, subprocess, tempfile, urllib.request
+          def run(*args):
+              return subprocess.check_output(args, text=True).strip()
+          run('git','config','user.name','github-actions[bot]')
+          run('git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com')
+          with urllib.request.urlopen('https://www.mp3quran.net/api/v3/reciters?reciter=123', timeout=90) as response:
+              reciter=json.load(response)['reciters'][0]
+          moshaf=next(m for m in reciter['moshaf'] if m['id']==123 and m['surah_total']==114 and m['rewaya_id']==1)
+          base=moshaf['server']
+          root=pathlib.Path('quran-audio')
+          root.mkdir(exist_ok=True)
+          manifest=pathlib.Path('quran-audio-manifest.js')
+          sizes=json.loads(manifest.read_text().split('=',1)[1].strip().rstrip(';'))
+          for number in range(1,115):
+              name=f'{number:03d}'
+              target=root/(name+'.m4a')
+              if target.exists() and target.stat().st_size==sizes[number-1]:
+                  print(f'{name}: zaten yuklu', flush=True)
+                  continue
+              print(f'{name}: indiriliyor', flush=True)
+              with tempfile.TemporaryDirectory() as temp:
+                  source=str(pathlib.Path(temp)/'source.mp3')
+                  output=str(pathlib.Path(temp)/'output.m4a')
+                  run('curl','--fail','--location','--retry','5','--retry-all-errors','--connect-timeout','30','--max-time','900',base+name+'.mp3','--output',source)
+                  source_duration=float(run('ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',source))
+                  run('ffmpeg','-nostdin','-v','error','-i',source,'-vn','-ac','1','-ar','22050','-c:a','aac','-b:a','24k','-movflags','+faststart',output)
+                  duration=float(run('ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',output))
+                  if source_duration<10 or abs(duration-source_duration)>1:
+                      raise RuntimeError(f'{name}: ses suresi dogrulanamadi')
+                  target.write_bytes(pathlib.Path(output).read_bytes())
+              sizes[number-1]=target.stat().st_size
+              manifest.write_text('window.quranAudioSizes='+json.dumps(sizes,separators=(',',':'))+';\n')
+              run('git','add',str(target),str(manifest))
+              run('git','commit','-m',f'Add Quran surah {name} audio')
+              run('git','push','origin','HEAD:main')
+              remote=run('git','ls-remote','origin','refs/heads/main').split()[0]
+              if remote!=run('git','rev-parse','HEAD'):
+                  raise RuntimeError(f'{name}: yukleme onayi alinamadi')
+              print(f'{name}: yuklendi ve dogrulandi ({number}/114)', flush=True)
+          assert all((root/f'{n:03d}.m4a').stat().st_size==sizes[n-1] for n in range(1,115))
+          print('114 surenin tamami yuklendi.', flush=True)
