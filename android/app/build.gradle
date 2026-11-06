@@ -4,7 +4,7 @@ android {
     namespace = "com.hayrullahbezan.salavatbahcesi"
     if (project.hasProperty('playAssetDelivery')) {
         assetPacks = [':quran_audio']
-        sourceSets.main.assets.exclude 'public/quran-audio/**'
+        sourceSets.main.assets.setSrcDirs([layout.buildDirectory.dir('play-assets').get().asFile])
     }
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
@@ -66,4 +66,14 @@ try {
     }
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
+
+// A separate source directory avoids shipping the Quran recordings twice.
+if (project.hasProperty('playAssetDelivery')) {
+    tasks.register('preparePlayAssets', Sync) {
+        from('src/main/assets')
+        exclude 'public/quran-audio/**'
+        into(layout.buildDirectory.dir('play-assets'))
+    }
+    tasks.named('preBuild').configure { dependsOn('preparePlayAssets') }
 }
