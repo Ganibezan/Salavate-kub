@@ -60,8 +60,8 @@ jobs:
           script: |
             adb shell wm size 1080x1920
             cd android && ./gradlew :app:connectedDebugAndroidTest --stacktrace
-            mkdir -p ../android-artifacts/screenshots
-            adb pull /sdcard/Android/data/com.hayrullahbezan.salavatbahcesi/files/screenshots/. ../android-artifacts/screenshots/
+            mkdir -p android-artifacts/screenshots
+            adb pull /sdcard/Pictures/SalavatBahcesiTest/. android-artifacts/screenshots/
       - name: Paketleri ve ekranlari sakla
         if: always()
         uses: actions/upload-artifact@v4

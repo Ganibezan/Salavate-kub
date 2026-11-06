@@ -1,6 +1,10 @@
 package com.hayrullahbezan.salavatbahcesi;
 
 import android.graphics.Bitmap;
+import android.content.ContentValues;
+import android.provider.MediaStore;
+import android.net.Uri;
+import java.io.OutputStream;
 import android.webkit.WebView;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -38,11 +42,17 @@ public class AndroidSmokeTest {
     private void screenshot(String name) throws Exception {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
         Thread.sleep(1500); // Allow web fonts and two animation frames to settle.
-        File directory = new File(InstrumentationRegistry.getInstrumentation().getTargetContext().getExternalFilesDir(null), "screenshots");
-        assertTrue(directory.isDirectory() || directory.mkdirs());
         Bitmap bitmap = InstrumentationRegistry.getInstrumentation().getUiAutomation().takeScreenshot();
         assertNotNull(bitmap);
-        try (FileOutputStream out = new FileOutputStream(new File(directory, name + ".png"))) {
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, name + ".png");
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        values.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/SalavatBahcesiTest");
+        android.content.ContentResolver resolver = InstrumentationRegistry.getInstrumentation().getTargetContext().getContentResolver();
+        Uri image = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        assertNotNull(image);
+        try (OutputStream out = resolver.openOutputStream(image)) {
+            assertNotNull(out);
             assertTrue(bitmap.compress(Bitmap.CompressFormat.PNG, 100, out));
         }
         bitmap.recycle();
