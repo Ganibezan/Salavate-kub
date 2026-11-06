@@ -29,6 +29,9 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+          log-accepted-android-sdk-licenses: false
       - run: npm ci
       - run: npm run android:prepare
       - name: Android APK ve test paketini derle
@@ -67,3 +70,4 @@ jobs:
             android/app/build/outputs/bundle/release/*.aab
             android/app/build/reports/androidTests/
             android-artifacts/screenshots/*.png
+
