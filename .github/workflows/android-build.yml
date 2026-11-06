@@ -1,0 +1,69 @@
+name: Android paket ve ekran kontrolu
+on:
+  push:
+    branches: [android-play-preparation, main]
+    paths:
+      - 'android/**'
+      - 'scripts/**'
+      - 'package*.json'
+      - 'capacitor.config.json'
+      - '.github/workflows/android-build.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - run: npm ci
+      - run: npm run android:prepare
+      - name: Android APK ve test paketini derle
+        working-directory: android
+        run: ./gradlew assembleDebug assembleDebugAndroidTest --stacktrace
+      - name: Google Play ses paketli AAB derle
+        working-directory: android
+        run: ./gradlew bundleRelease -PplayAssetDelivery --stacktrace
+      - name: AAB icerigini dogrula
+        run: python3 scripts/verify-android.py android/app/build/outputs/bundle/release/app-release.aab
+      - name: Emulator icin KVM erisimi
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gercek Android ekranlari ve cevrimdisi icerik testi
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_2
+          disable-animations: true
+          script: |
+            adb shell wm size 1080x1920
+            cd android && ./gradlew connectedDebugAndroidTest --stacktrace
+            mkdir -p ../android-artifacts/screenshots
+            adb pull /sdcard/Android/data/com.hayrullahbezan.salavatbahcesi/files/screenshots/. ../android-artifacts/screenshots/
+      - name: Paketleri ve ekranlari sakla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: salavat-bahcesi-android
+          retention-days: 14
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/bundle/release/*.aab
+            android/app/build/reports/androidTests/
+            android-artifacts/screenshots/*.png

@@ -9,3 +9,7 @@ ios/App/App.xcodeproj/xcuserdata/
 *.p12
 *.mobileprovision
 .DS_Store
+
+*.jks
+*.keystore
+android-artifacts/

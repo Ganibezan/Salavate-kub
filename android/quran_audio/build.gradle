@@ -1,0 +1,13 @@
+apply plugin: 'com.android.asset-pack'
+assetPack {
+    packName = 'quran_audio'
+    dynamicDelivery { deliveryType = 'install-time' }
+}
+// Copy from verified web assets, without tracking duplicate audio files.
+tasks.register('prepareQuranAudio', Copy) {
+    from('../app/src/main/assets/public/quran-audio')
+    into('src/main/assets/public/quran-audio')
+}
+tasks.configureEach { task ->
+    if (task.name.startsWith('generate') || task.name.startsWith('package') || task.name.startsWith('merge') || task.name == 'preBuild') task.dependsOn('prepareQuranAudio')
+}
